@@ -129,6 +129,11 @@ USE_TZ = True
 
 AUTHENTICATION_BACKENDS = ['accounts.authentication.MongoEngineBackend']
 
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'id',       # Tells JWT which field on the user to store in the token
+    'USER_ID_CLAIM': 'user_id',  # The claim name in the token
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
