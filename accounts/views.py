@@ -129,4 +129,9 @@ def protected_endpoint(request):
         'user_id': str(request.user.id)
     })
 
+    # serializer --------------------------------------------
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import MongoTokenObtainPairSerializer
 
+class MongoTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MongoTokenObtainPairSerializer
