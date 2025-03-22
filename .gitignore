@@ -1,0 +1,17 @@
+# Python/Django
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.env
+
+# If using SQLite:
+db.sqlite3
+
+# If using migrations in a standard Django project:
+*.pyc
+*.pyo
+*.log
+*.pot
+*.mo
