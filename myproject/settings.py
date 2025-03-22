@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['my-aumoui-backend.onrender.com','localhost']
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'corsheaders',
@@ -84,6 +85,11 @@ mongoengine.connect(
     tls=True  # or ssl=True depending on your setup
 )
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 
 # Password validation
