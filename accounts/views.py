@@ -86,11 +86,12 @@ def login_view(request):
 
 
 # uploading and editing profile screen to cater to what user is online --------------------------------------------
-@csrf_exempt
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
 def profile_view(request):
-    user = ... # retrieve user from session or token
+    user = request.user  # JWTAuthentication sets this automatically
     if request.method == 'GET':
-        return JsonResponse({
+        return Response({
             'name': user.name,
             'age_group': user.age_group,
             'hair_types': user.hair_types,
@@ -98,14 +99,15 @@ def profile_view(request):
             'allergies': user.allergies,
         })
     elif request.method == 'PUT':
-        data = json.loads(request.body)
+        data = request.data
         user.name = data.get('name', '')
         user.age_group = data.get('age_group', '')
         user.hair_types = data.get('hair_types', [])
         user.skin_types = data.get('skin_types', [])
         user.allergies = data.get('allergies', [])
         user.save()
-        return JsonResponse({'message': 'Profile updated successfully!'})
+        return Response({'message': 'Profile updated successfully!'})
+
     
     # protected JWT endpoint --------------------------------------------
 
