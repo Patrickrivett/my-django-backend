@@ -35,3 +35,32 @@ def signup(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+
+
+# accounts/views.py ------------------------------------------------------------------------
+def login_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            email = data.get('email')
+            password = data.get('password')
+
+            if not email or not password:
+                return JsonResponse({'error': 'Email and password required.'}, status=400)
+
+            # Find user by email
+            user = User.objects(email=email).first()
+            if not user:
+                return JsonResponse({'error': 'User does not exist.'}, status=400)
+
+            # Check password
+            if not user.check_password(password):
+                return JsonResponse({'error': 'Incorrect password.'}, status=400)
+
+            # If correct, return success
+            return JsonResponse({'message': 'Logged in successfully!'}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
