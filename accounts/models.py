@@ -22,3 +22,7 @@ class User(Document):
     def check_password(self, raw_password):
         """Verify a raw password against the stored hash."""
         return bcrypt.verify(raw_password, self.password_hash)
+    @property
+    def is_active(self):
+        # For now, we assume every user is active.
+        return True
