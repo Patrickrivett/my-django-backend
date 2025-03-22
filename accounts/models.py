@@ -1,4 +1,5 @@
 from django.db import models
+from mongoengine import Document, StringField, ListField
 
 # Create your models here.
 
@@ -8,6 +9,11 @@ from passlib.hash import bcrypt
 class User(Document):
     email = StringField(required=True, unique=True)
     password_hash = StringField(required=True)
+
+    name = StringField()  # e.g., "Jane"
+    age_group = StringField()  # e.g., "Adult", "Teen", "Senior"
+    hair_types = ListField(StringField())  # e.g., ["Frizzy", "Dry"]
+    skin_types = ListField(StringField())  # e.g., ["Oily", "Thin"]
 
     def set_password(self, raw_password):
         """Hash and set the password."""

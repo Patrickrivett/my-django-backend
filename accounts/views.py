@@ -15,6 +15,10 @@ def signup(request):
             data = json.loads(request.body.decode('utf-8'))
             email = data.get('email')
             password = data.get('password')
+            name = data.get('name')
+            age_group = data.get('age_group')
+            hair_types = data.get('hair_types', [])  # array of strings
+            skin_types = data.get('skin_types', [])
 
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required.'}, status=400)
@@ -24,7 +28,13 @@ def signup(request):
                 return JsonResponse({'error': 'User already exists.'}, status=400)
 
             # Create new user
-            user = User(email=email)
+            user = User(
+                email=email,
+                name=name,
+                age_group=age_group,
+                hair_types=hair_types,
+                skin_types=skin_types
+            )
             user.set_password(password)
             user.save()
 
