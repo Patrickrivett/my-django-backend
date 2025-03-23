@@ -19,6 +19,7 @@ def signup(request):
             age_group = data.get('age_group')
             hair_types = data.get('hair_types', [])  # array of strings
             skin_types = data.get('skin_types', [])
+            allergies = data.get('allergies', [])
 
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required.'}, status=400)
@@ -33,12 +34,19 @@ def signup(request):
                 name=name,
                 age_group=age_group,
                 hair_types=hair_types,
-                skin_types=skin_types
+                skin_types=skin_types,
+                allergies=allergies
             )
             user.set_password(password)
             user.save()
 
-            return JsonResponse({'message': 'User created successfully!'}, status=201)
+            # Generate JWT tokens for the user
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({
+                'message': 'User created successfully!',
+                'access': str(refresh.access_token),
+                'refresh': str(refresh)
+            }, status=201)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
