@@ -26,3 +26,7 @@ class User(Document):
     def is_active(self):
         # For now, we assume every user is active.
         return True
+    @property
+    def is_authenticated(self):
+    # For an authenticated user, this should always be True.
+        return True
