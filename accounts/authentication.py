@@ -17,6 +17,9 @@ class MongoEngineBackend(BaseBackend):
         except User.DoesNotExist:
             return None
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.settings import api_settings
+from .models import User
 import logging
 
 logger = logging.getLogger(__name__)
@@ -24,9 +27,12 @@ logger = logging.getLogger(__name__)
 class MongoJWTAuthentication(JWTAuthentication):
     def get_user(self, validated_token):
         try:
-            user_id = validated_token.get(self.get_user_id_claim())  # e.g. 'user_id'
+            # Instead of calling self.get_user_id_claim(), we read it from api_settings:
+            user_id_claim = api_settings.USER_ID_CLAIM
+            user_id = validated_token.get(user_id_claim)
+
             logger.info(f"Token user_id: {user_id}")
-            # Lookup the user by string ID
+
             user = User.objects.get(id=user_id)
             logger.info(f"Found user: {user.email}")
             return user
