@@ -7,6 +7,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
 import json
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+
 
 @csrf_exempt  # Disable CSRF just for simplicity; consider proper CSRF handling or JWT for production
 def signup(request):
@@ -57,7 +63,7 @@ def signup(request):
 
 # login view, allows user to login by comparing input to users in database --------------------------------------------
 
-from rest_framework_simplejwt.tokens import RefreshToken
+
 
 @csrf_exempt
 def login_view(request):
@@ -95,9 +101,7 @@ def login_view(request):
 
 # uploading and editing profile screen to cater to what user is online --------------------------------------------
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+
 
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
@@ -124,10 +128,7 @@ def profile_view(request):
     
     # protected JWT endpoint --------------------------------------------
 
-    from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def protected_endpoint(request):
