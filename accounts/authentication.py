@@ -17,12 +17,19 @@ class MongoEngineBackend(BaseBackend):
         except User.DoesNotExist:
             return None
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class MongoJWTAuthentication(JWTAuthentication):
     def get_user(self, validated_token):
         try:
-            # Get the user ID from the token using the claim defined in SIMPLE_JWT
-            user_id = validated_token.get(self.get_user_id_claim())
-            # Lookup the user with MongoEngine. The user_id is a string.
-            return User.objects.get(id=user_id)
-        except Exception:
+            user_id = validated_token.get(self.get_user_id_claim())  # e.g. 'user_id'
+            logger.info(f"Token user_id: {user_id}")
+            # Lookup the user by string ID
+            user = User.objects.get(id=user_id)
+            logger.info(f"Found user: {user.email}")
+            return user
+        except Exception as e:
+            logger.error(f"Error in get_user: {e}")
             return None
