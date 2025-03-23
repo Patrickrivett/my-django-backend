@@ -14,6 +14,7 @@ class User(Document):
     age_group = StringField()  # e.g., "Adult", "Teen", "Senior"
     hair_types = ListField(StringField())  # e.g., ["Frizzy", "Dry"]
     skin_types = ListField(StringField())  # e.g., ["Oily", "Thin"]
+    allergies = ListField(StringField())    # e.g., ["Rose Oil"]
 
     def set_password(self, raw_password):
         """Hash and set the password."""
