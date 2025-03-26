@@ -34,6 +34,7 @@ class User(Document):
 
 
 class Ingredient(Document):
+    meta = {'collection': 'ingredients'}
     name = StringField(required=True, unique=True)
     benefits = ListField(StringField())
     description = StringField()
