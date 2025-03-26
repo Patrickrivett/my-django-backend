@@ -13,7 +13,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 
-
 @csrf_exempt  # Disable CSRF just for simplicity; consider proper CSRF handling or JWT for production
 def signup(request):
     if request.method == 'POST':
@@ -144,3 +143,24 @@ from .serializers import MongoTokenObtainPairSerializer
 
 class MongoTokenObtainPairView(TokenObtainPairView):
     serializer_class = MongoTokenObtainPairSerializer
+
+# views.py
+
+from .models import Ingredient
+from .serializers import IngredientSerializer
+
+@api_view(['GET'])
+def search_ingredients(request):
+    # Get the query from the URL: /ingredients/search?q=something
+    query = request.GET.get('q', '')
+    if not query:
+        return Response({'error': 'No search query provided'}, status=400)
+    
+    # Perform a simple case-insensitive search on the name field:
+    # e.g., name__icontains=query
+    # You could also search by tags, description, etc.
+    ingredients = Ingredient.objects(name__icontains=query)
+
+    # Serialize the results
+    serializer = IngredientSerializer(ingredients, many=True)
+    return Response(serializer.data)

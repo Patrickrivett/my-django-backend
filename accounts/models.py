@@ -31,3 +31,11 @@ class User(Document):
     def is_authenticated(self):
     # For an authenticated user, this should always be True.
         return True
+
+
+class Ingredient(Document):
+    name = StringField(required=True, unique=True)
+    benefits = ListField(StringField())
+    description = StringField()
+    warnings = ListField(StringField())
+    tags = ListField(StringField())
