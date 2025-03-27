@@ -164,3 +164,22 @@ def search_ingredients(request):
     # Serialize the results
     serializer = IngredientSerializer(ingredients, many=True)
     return Response(serializer.data)
+
+from .serializers import ProblemSerializer
+from .models import Problem
+
+@api_view(['GET'])
+def search_problems(request):
+    # Get the query from the URL: /ingredients/search?q=something
+    query = request.GET.get('q', '')
+    if not query:
+        return Response({'error': 'No search query provided'}, status=400)
+    
+    # Perform a simple case-insensitive search on the name field:
+    # e.g., name__icontains=query
+    # You could also search by tags, description, etc.
+    problems = Problem.objects(name__icontains=query)
+
+    # Serialize the results
+    serializer = ProblemSerializer(problems, many=True)
+    return Response(serializer.data)

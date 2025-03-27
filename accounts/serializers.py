@@ -20,3 +20,10 @@ class IngredientSerializer(serializers.Serializer):
     warnings = serializers.ListField(child=serializers.CharField(), required=False)
     tags = serializers.ListField(child=serializers.CharField(), required=False)
     aromatherapy_uses = serializers.CharField(required=False)  
+
+
+class ProblemSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    ingredients = serializers.ListField(child=serializers.CharField(), required=False)
+    description = serializers.CharField(required=False)
+    tags = serializers.ListField(child=serializers.CharField(), required=False)

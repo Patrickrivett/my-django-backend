@@ -41,3 +41,12 @@ class Ingredient(Document):
     warnings = ListField(StringField())
     tags = ListField(StringField())
     aromatherapy_uses = StringField()
+
+
+class Problem(Document):
+    meta = {'collection': 'problems'}
+    name = StringField(required=True, unique=True)
+    ingredients = ListField(StringField())
+    description = StringField()
+    tags = ListField(StringField())
+    
