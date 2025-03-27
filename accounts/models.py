@@ -40,3 +40,4 @@ class Ingredient(Document):
     description = StringField()
     warnings = ListField(StringField())
     tags = ListField(StringField())
+    aromatherapy_uses = StringField()
