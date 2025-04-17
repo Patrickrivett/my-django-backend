@@ -1,12 +1,14 @@
-from django.shortcuts import render
-
-# Create your views here.
-# ------------------------- view for product view set -------------------------
-
-from rest_framework import viewsets
+# products/views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Product
-from .serializers import ProductSerializer
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset         = Product.objects.all()
-    serializer_class = ProductSerializer
+@api_view(['GET'])
+def product_list(request):
+    """
+    GET /api/products/ → Return all products from MongoDB Atlas
+    """
+    docs = Product.objects  # mongoengine QuerySet
+    # Convert each document to a plain dict
+    data = [doc.to_dict() for doc in docs]
+    return Response(data)

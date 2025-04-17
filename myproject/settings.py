@@ -88,6 +88,8 @@ mongoengine.connect(
     tls=True  # or ssl=True depending on your setup
 )
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'accounts.authentication.MongoJWTAuthentication',
