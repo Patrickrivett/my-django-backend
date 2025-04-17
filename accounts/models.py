@@ -1,8 +1,6 @@
 from django.db import models
 from mongoengine import Document, StringField, ListField
 
-# Create your models here.
-
 from mongoengine import Document, StringField
 from passlib.hash import bcrypt
 
@@ -10,11 +8,11 @@ class User(Document):
     email = StringField(required=True, unique=True)
     password_hash = StringField(required=True)
 
-    name = StringField()  # e.g., "Jane"
-    age_group = StringField()  # e.g., "Adult", "Teen", "Senior"
-    hair_types = ListField(StringField())  # e.g., ["Frizzy", "Dry"]
-    skin_types = ListField(StringField())  # e.g., ["Oily", "Thin"]
-    allergies = ListField(StringField())    # e.g., ["Rose Oil"]
+    name = StringField()  
+    age_group = StringField()  
+    hair_types = ListField(StringField()) 
+    skin_types = ListField(StringField()) 
+    allergies = ListField(StringField())   
 
     def set_password(self, raw_password):
         """Hash and set the password."""
@@ -25,11 +23,9 @@ class User(Document):
         return bcrypt.verify(raw_password, self.password_hash)
     @property
     def is_active(self):
-        # For now, we assume every user is active.
         return True
     @property
     def is_authenticated(self):
-    # For an authenticated user, this should always be True.
         return True
 
 
@@ -50,3 +46,14 @@ class Problem(Document):
     description = StringField()
     tags = ListField(StringField())
     
+
+class Product(models.Model):
+     name        = models.CharField(max_length=200)
+     price       = models.DecimalField(max_digits=6, decimal_places=2)
+     image       = models.ImageField(upload_to='products/')  # Cloudinary‑backed
+     category    = models.CharField(max_length=50)
+     tags        = models.JSONField(default=list)
+     description = models.TextField(blank=True)  
+
+     def __str__(self):
+         return self.name

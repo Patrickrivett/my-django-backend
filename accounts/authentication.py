@@ -5,7 +5,6 @@ from .models import User
 
 class MongoEngineBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        # Treat 'username' as the email.
         user = User.objects(email=username).first()
         if user and user.check_password(password):
             return user
@@ -27,7 +26,7 @@ logger = logging.getLogger(__name__)
 class MongoJWTAuthentication(JWTAuthentication):
     def get_user(self, validated_token):
         try:
-            # Instead of calling self.get_user_id_claim(), we read it from api_settings:
+            
             user_id_claim = api_settings.USER_ID_CLAIM
             user_id = validated_token.get(user_id_claim)
 

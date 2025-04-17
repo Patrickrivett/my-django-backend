@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 
-@csrf_exempt  # Disable CSRF just for simplicity; consider proper CSRF handling or JWT for production
+@csrf_exempt 
 def signup(request):
     if request.method == 'POST':
         try:
@@ -22,18 +22,17 @@ def signup(request):
             password = data.get('password')
             name = data.get('name')
             age_group = data.get('age_group')
-            hair_types = data.get('hair_types', [])  # array of strings
+            hair_types = data.get('hair_types', []) 
             skin_types = data.get('skin_types', [])
             allergies = data.get('allergies', [])
 
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required.'}, status=400)
 
-            # Check if user already exists
             if User.objects(email=email).first():
                 return JsonResponse({'error': 'User already exists.'}, status=400)
 
-            # Create new user
+
             user = User(
                 email=email,
                 name=name,
@@ -45,7 +44,7 @@ def signup(request):
             user.set_password(password)
             user.save()
 
-            # Generate JWT tokens for the user
+            # generate jwt token for user: these are used for authentication, so the user can access their own info and login
             refresh = RefreshToken.for_user(user)
             return JsonResponse({
                 'message': 'User created successfully!',
@@ -75,12 +74,10 @@ def login_view(request):
             if not email or not password:
                 return JsonResponse({'error': 'Email and password required.'}, status=400)
 
-            # Find user by email
             user = User.objects(email=email).first()
             if not user:
                 return JsonResponse({'error': 'User does not exist.'}, status=400)
 
-            # Check password
             if not user.check_password(password):
                 return JsonResponse({'error': 'Incorrect password.'}, status=400)
 
@@ -105,7 +102,7 @@ def login_view(request):
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def profile_view(request):
-    user = request.user  # JWTAuthentication sets this automatically
+    user = request.user  
     if request.method == 'GET':
         return Response({
             'name': user.name,
@@ -131,7 +128,6 @@ def profile_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def protected_endpoint(request):
-    # request.user is set by the JWTAuthentication class
     return Response({
         'message': f'Hello, {request.user.email}! This is protected data.',
         'user_id': str(request.user.id)
@@ -151,17 +147,12 @@ from .serializers import IngredientSerializer
 
 @api_view(['GET'])
 def search_ingredients(request):
-    # Get the query from the URL: /ingredients/search?q=something
     query = request.GET.get('q', '')
     if not query:
         return Response({'error': 'No search query provided'}, status=400)
     
-    # Perform a simple case-insensitive search on the name field:
-    # e.g., name__icontains=query
-    # You could also search by tags, description, etc.
     ingredients = Ingredient.objects(name__icontains=query)
 
-    # Serialize the results
     serializer = IngredientSerializer(ingredients, many=True)
     return Response(serializer.data)
 
@@ -170,16 +161,22 @@ from .models import Problem
 
 @api_view(['GET'])
 def search_problems(request):
-    # Get the query from the URL: /ingredients/search?q=something
     query = request.GET.get('q', '')
     if not query:
         return Response({'error': 'No search query provided'}, status=400)
     
-    # Perform a simple case-insensitive search on the name field:
-    # e.g., name__icontains=query
-    # You could also search by tags, description, etc.
     problems = Problem.objects(name__icontains=query)
 
     # Serialize the results
     serializer = ProblemSerializer(problems, many=True)
     return Response(serializer.data)
+
+# ------------------------- view for product view set -------------------------
+
+from rest_framework import viewsets
+from .models import Product
+from .serializers import ProductSerializer
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer

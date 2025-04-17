@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +145,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+MEDIA_URL = '/media/'         # unused for uploads, but Django requires it
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dlvpaqp28',
+    'API_KEY':    '411488331279521',
+    'API_SECRET': 'FQY8bWgCXYi-HXbIpZITUuoC3fI',
+}
