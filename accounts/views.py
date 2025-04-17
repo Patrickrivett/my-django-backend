@@ -171,12 +171,3 @@ def search_problems(request):
     serializer = ProblemSerializer(problems, many=True)
     return Response(serializer.data)
 
-# ------------------------- view for product view set -------------------------
-
-from rest_framework import viewsets
-from .models import Product
-from .serializers import ProductSerializer
-
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer

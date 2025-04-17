@@ -26,14 +26,3 @@ class ProblemSerializer(serializers.Serializer):
     ingredients = serializers.ListField(child=serializers.CharField(), required=False)
     description = serializers.CharField(required=False)
     tags = serializers.ListField(child=serializers.CharField(), required=False)
-
-from .models import Product
-
-class ProductSerializer(serializers.ModelSerializer):
-    imageUrl    = serializers.ImageField(source='image', read_only=True)
-    description = serializers.CharField(read_only=True)
-
-    class Meta:
-        model  = Product
-        fields = ['id', 'name', 'description', 'price',
-                  'imageUrl', 'category', 'tags']
