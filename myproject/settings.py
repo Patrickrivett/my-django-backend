@@ -81,12 +81,9 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+MONGO_DB_NAME = 'AumOui_Essentials'
+MONGO_HOST    = 'mongodb+srv://patrickrivett:…@aumouiessentials.ptg4v.mongodb.net/AumOui_Essentials?retryWrites=true&w=majority'
 
-mongoengine.connect(
-    db='AumOui_Essentials',  # Your MongoDB database name
-    host='mongodb+srv://patrickrivett:aumOuiEssentials@aumouiessentials.ptg4v.mongodb.net/AumOui_Essentials?retryWrites=true&w=majority',
-    tls=True  # or ssl=True depending on your setup
-)
 
 CORS_ALLOW_ALL_ORIGINS = True
 
