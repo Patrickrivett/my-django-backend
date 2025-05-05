@@ -85,7 +85,11 @@ MONGO_DB_NAME = 'AumOui_Essentials'
 MONGO_HOST    = 'mongodb+srv://patrickrivett:…@aumouiessentials.ptg4v.mongodb.net/AumOui_Essentials?retryWrites=true&w=majority'
 
 
+# Allow requests from anywhere (or lock it down to your Expo domain)
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Must include your Render hostname, or use ["*"]
+ALLOWED_HOSTS = ["my-aumoui-backend.onrender.com"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
