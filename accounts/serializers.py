@@ -5,6 +5,7 @@ class MongoTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        # Store user ID as a string
         token['user_id'] = str(user.id)
         return token
 

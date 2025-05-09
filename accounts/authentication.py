@@ -26,15 +26,21 @@ logger = logging.getLogger(__name__)
 class MongoJWTAuthentication(JWTAuthentication):
     def get_user(self, validated_token):
         try:
-            
             user_id_claim = api_settings.USER_ID_CLAIM
             user_id = validated_token.get(user_id_claim)
 
-            logger.info(f"Token user_id: {user_id}")
+            if not user_id:
+                logger.error("No user_id found in the token.")
+                return None
 
-            user = User.objects.get(id=user_id)
-            logger.info(f"Found user: {user.email}")
+            user = User.objects(id=user_id).first()
+            if not user:
+                logger.error(f"No user found with id: {user_id}")
+                return None
+
+            logger.info(f"Authenticated user: {user.email}")
             return user
+
         except Exception as e:
             logger.error(f"Error in get_user: {e}")
             return None

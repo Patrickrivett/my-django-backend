@@ -20,31 +20,19 @@ def signup(request):
             data = json.loads(request.body.decode('utf-8'))
             email = data.get('email')
             password = data.get('password')
-            name = data.get('name')
-            age_group = data.get('age_group')
-            hair_types = data.get('hair_types', []) 
-            skin_types = data.get('skin_types', [])
-            allergies = data.get('allergies', [])
 
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required.'}, status=400)
 
+            # Check if user already exists
             if User.objects(email=email).first():
                 return JsonResponse({'error': 'User already exists.'}, status=400)
 
-
-            user = User(
-                email=email,
-                name=name,
-                age_group=age_group,
-                hair_types=hair_types,
-                skin_types=skin_types,
-                allergies=allergies
-            )
+            user = User(email=email)
             user.set_password(password)
             user.save()
 
-            # generate jwt token for user: these are used for authentication, so the user can access their own info and login
+            # Generate JWT tokens for the user
             refresh = RefreshToken.for_user(user)
             return JsonResponse({
                 'message': 'User created successfully!',
@@ -56,6 +44,7 @@ def signup(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
 
 
 
@@ -103,6 +92,7 @@ def login_view(request):
 @permission_classes([IsAuthenticated])
 def profile_view(request):
     user = request.user  
+
     if request.method == 'GET':
         return Response({
             'name': user.name,
@@ -111,17 +101,16 @@ def profile_view(request):
             'skin_types': user.skin_types,
             'allergies': user.allergies,
         })
+    
     elif request.method == 'PUT':
         data = request.data
-        user.name = data.get('name', '')
-        user.age_group = data.get('age_group', '')
-        user.hair_types = data.get('hair_types', [])
-        user.skin_types = data.get('skin_types', [])
-        user.allergies = data.get('allergies', [])
+        user.name = data.get('name', user.name)
+        user.age_group = data.get('age_group', user.age_group)
+        user.hair_types = data.get('hair_types', user.hair_types)
+        user.skin_types = data.get('skin_types', user.skin_types)
+        user.allergies = data.get('allergies', user.allergies)
         user.save()
         return Response({'message': 'Profile updated successfully!'})
-
-    
     # protected JWT endpoint --------------------------------------------
 
     
